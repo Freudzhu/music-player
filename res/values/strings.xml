@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="app_name">MusicPlayer</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_mp3_list">Mp3ListActivity</string>
+	<string name="mp3list_update">更新列表</string>
+	<string name="mp3list_about">关于</string>
+</resources>
