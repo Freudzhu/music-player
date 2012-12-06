@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Mp3ListActivity"
+            android:name=".RemoteMp3ListActivity"
             android:label="@string/title_activity_mp3_list" >
            
         </activity>

@@ -14,6 +14,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -33,6 +34,7 @@ public class MusicPlayerActivity extends Activity{
 	TextView lrcMessage4 = null;
 	SeekBar seekBarMusic = null;
 	ArrayList<Mp3Info> mp3InfoArrayList = null;
+	int position ;
 	Mp3Info mp3Info;
 	NotificationManager manager;
 	LrcMessageBoardcast lrcMessageBoardcast = new LrcMessageBoardcast();	
@@ -108,6 +110,8 @@ public class MusicPlayerActivity extends Activity{
 		        .setContentTitle("My notification")
 		        .setContentText("’˝‘⁄≤•∑≈“Ù¿÷");
 		Intent notificationIntent = new Intent(this, MusicPlayerActivity.class);  
+		notificationIntent.putParcelableArrayListExtra("AllMp3Info", (ArrayList<? extends Parcelable>) mp3InfoArrayList);
+		notificationIntent.putExtra("mp3Position", position);
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		// Adds the back stack for the Intent (but not the Intent itself)
 		stackBuilder.addParentStack(MainActivity.class);
@@ -160,7 +164,7 @@ public class MusicPlayerActivity extends Activity{
 				}				
 			}
 		});
-		int position = 0;
+		
 		Intent mp3InfoIntent = getIntent();
 		mp3InfoArrayList = mp3InfoIntent.getParcelableArrayListExtra("AllMp3Info");	
 		mp3InfoIntent.getIntExtra("mp3Position", 0);
@@ -170,12 +174,17 @@ public class MusicPlayerActivity extends Activity{
 	    Intent intent = new Intent(this, MusicPlayerService.class);
 	    intent.putExtra("mp3Info", mp3Info);
 	    bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-	    
+	    System.out.println(manager);
+		if(manager == null){
+			creatNotification();
+		}
 	   
 	}
 	
 	public void	startMusicPlay(View v){
-		creatNotification();
+		if(manager == null){
+			creatNotification();
+		}
 		Intent intent =new Intent();
 		intent.setClass(this, MusicPlayerService.class);
 		intent.putExtra("mp3Info", mp3Info);
@@ -200,7 +209,10 @@ public class MusicPlayerActivity extends Activity{
 		startService(intent);
 	}
 	public void	stopMusicPlay(View v){
-		manager.cancel(notifyId);
+		if(manager != null){
+			manager.cancel(notifyId);
+			manager = null;
+		}
 		Intent intent =new Intent();
 		intent.setClass(this, MusicPlayerService.class);
 		intent.putExtra("mp3Info", mp3Info);

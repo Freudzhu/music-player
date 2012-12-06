@@ -1,0 +1,1 @@
+this is simply music player for android.it is suitable for beginer to learn android.it use android technique such as activity ,service,Broadcast.if you have any question.please email to zhhh1988@gmail.com.i will respone as soon as possible.Thank you! 

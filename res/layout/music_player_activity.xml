@@ -4,29 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-	<LinearLayout
+  <LinearLayout
     	android:layout_width="match_parent"
     	android:layout_height="wrap_content"
-    	android:orientation="horizontal" >
-    	<ImageButton
-        android:id="@+id/btnStart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/start" 
-        android:onClick="startMusicPlay"/>
-    	<ImageButton
-        android:id="@+id/btnPause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/pause"
-        android:onClick="pauseMusicPlay" />
-   		 <ImageButton
-        android:id="@+id/btnStop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/stop" 
-        android:onClick="stopMusicPlay"/>	    
-    </LinearLayout>
+    	android:orientation="vertical" >
 
     <TextView
         android:id="@+id/txtLrc1"
@@ -68,5 +49,30 @@
         android:id="@+id/seekBarMusic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+     </LinearLayout>
+    
+    <LinearLayout
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="horizontal" >
+    	<ImageButton
+        android:id="@+id/btnStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/start" 
+        android:onClick="startMusicPlay"/>
+    	<ImageButton
+        android:id="@+id/btnPause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/pause"
+        android:onClick="pauseMusicPlay" />
+   		 <ImageButton
+        android:id="@+id/btnStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/stop" 
+        android:onClick="stopMusicPlay"/>	    
+    </LinearLayout>
 
 </LinearLayout>

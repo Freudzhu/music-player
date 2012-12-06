@@ -23,6 +23,7 @@ public class HttpDownLoader {
 		try {
 			url = new URL(urlStr);
 			urlConn = (HttpURLConnection) url.openConnection();
+			urlConn.setConnectTimeout(3000);
 			bf = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
 			while( (line = bf.readLine()) != null){
 				sb.append(line);
@@ -30,10 +31,12 @@ public class HttpDownLoader {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally{
+		}
+		finally{
 			try {
 				urlConn.disconnect();
-				bf.close();
+				if(bf != null)
+					bf.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

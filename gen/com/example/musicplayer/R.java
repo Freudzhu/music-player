@@ -23,18 +23,18 @@ public final class R {
         public static final int stop=0x7f020004;
     }
     public static final class id {
-        public static final int btnPause=0x7f080003;
-        public static final int btnStart=0x7f080002;
-        public static final int btnStop=0x7f080004;
+        public static final int btnPause=0x7f080009;
+        public static final int btnStart=0x7f080008;
+        public static final int btnStop=0x7f08000a;
         public static final int menu_settings=0x7f08000b;
         public static final int mp3_name=0x7f080000;
         public static final int mp3_szie=0x7f080001;
-        public static final int seekBarMusic=0x7f08000a;
-        public static final int txtLrc1=0x7f080005;
-        public static final int txtLrc2=0x7f080006;
-        public static final int txtLrc3=0x7f080008;
-        public static final int txtLrc4=0x7f080009;
-        public static final int txtLrcMessage=0x7f080007;
+        public static final int seekBarMusic=0x7f080007;
+        public static final int txtLrc1=0x7f080002;
+        public static final int txtLrc2=0x7f080003;
+        public static final int txtLrc3=0x7f080005;
+        public static final int txtLrc4=0x7f080006;
+        public static final int txtLrcMessage=0x7f080004;
     }
     public static final class layout {
         public static final int activity_mp3_list=0x7f030000;

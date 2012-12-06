@@ -17,7 +17,7 @@ public class MainActivity extends TabActivity{
 		tabHost = getTabHost();
 		//tabspec就是tabActivity中的一页
 		Intent remoteIntent = new Intent();
-		remoteIntent.setClass(this, Mp3ListActivity.class);
+		remoteIntent.setClass(this, RemoteMp3ListActivity.class);
 		TabHost.TabSpec remoteList = tabHost.newTabSpec("remote");
 		Resources resource = getResources();
 		remoteList.setIndicator("remote", resource.getDrawable(android.R.drawable.stat_sys_download));
