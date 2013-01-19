@@ -4,18 +4,22 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="9"
+        android:minSdkVersion="8"
         android:targetSdkVersion="15" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-        <activity
-            android:name=".MainActivity">       
+        android:theme="@style/AppTheme"
+        android:name="InfoApplication">
+        <activity android:name=".MainActivity"
+            	  android:configChanges="orientation|keyboard|keyboardHidden"
+           >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+     			<action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -23,24 +27,30 @@
         <activity
             android:name=".RemoteMp3ListActivity"
             android:label="@string/title_activity_mp3_list" >
-           
-        </activity>
-         <activity
-            android:name=".LocalMp3ListActivity"
-            android:label="@string/title_activity_mp3_list" >
-           
         </activity>
         <activity
-            android:name=".MusicPlayerActivity">
-           
-           
+            android:name=".LocalMp3ListActivity"
+            android:label="@string/title_activity_mp3_list" >
         </activity>
+        <activity android:name=".MusicPlayerActivity" >
+        </activity>
+
         <service android:name=".service.DownloaderService" />
         <service android:name=".service.MusicPlayerService" />
-        
- 
-        
+
+        <activity
+            android:name=".PlayerActivity"
+            android:label="@string/title_activity_player"
+            android:launchMode="singleTop"
+            android:configChanges="orientation|keyboardHidden"
+             >
+
+        </activity>
+        <activity
+            android:name=".FileViewActivity"
+            android:label="@string/dirchooser_label" >
+
+        </activity>
     </application>
- 
 
 </manifest>

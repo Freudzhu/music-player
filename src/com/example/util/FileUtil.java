@@ -79,6 +79,7 @@ public class FileUtil {
 					info.setMp3Size(files[i].length()+"");
 					String lrcName = files[i].getName().substring(0, files[i].getName().length() - 4) + ".lrc";
 					info.setLrcName(lrcName);	
+					info.setSrc(mp3DirPath + File.separator + files[i].getName());
 					infos.add(info);
 				}
 				

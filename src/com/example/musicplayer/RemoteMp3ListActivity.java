@@ -15,24 +15,28 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
-
 import com.example.downloader.HttpDownLoader;
 import com.example.model.Mp3Info;
 import com.example.musicplayer.service.DownloaderService;
 import com.example.xml.Mp3ListContentHandler;
 public class RemoteMp3ListActivity extends ListActivity {
+	//menu id
 	private static final int UPDATE = 1;
 	private static final int ABOUT = 2;
+	//httpserver address which have the mp3 files.
 	private static final String mp3SerAddr = "http://10.0.2.2:8080/mp3/resources.xml";
+	//mp3 infomations
 	List<Mp3Info> infos =  null;
-	//点击menu会调用这个方法，可以自定义自己的控件
+	
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mp3_list);
-        updateListView();
+        //updateListView();
     }
-
+    
+    //click the menu will call the fuction，
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //getMenuInflater().inflate(R.menu.activity_mp3_list, menu);
@@ -65,29 +69,9 @@ public class RemoteMp3ListActivity extends ListActivity {
 		}
 				
 	}
-	private SimpleAdapter buildSimpleAdapter(List<Mp3Info> mp3Info){
-		List<HashMap<String, String>> list = new ArrayList<HashMap<String,String>>();
-		if(mp3Info != null){
-			for(Mp3Info m : mp3Info){
-				HashMap<String,String> map = new HashMap<String, String>();
-				map.put("mp3_name", m.getMp3Name());
-				map.put("mp3_size", m.getMp3Size());
-				list.add(map);
-			}
-		}
-		SimpleAdapter simpleAdapter = new SimpleAdapter(this, list, R.layout.mp3list_item, new String[]{"mp3_name","mp3_size"},new int[]{R.id.mp3_name,R.id.mp3_szie});
-		return simpleAdapter;
-	}
+	
 	private void updateListView(){
-		String xml = downLoadXMl(mp3SerAddr);
-		if(xml != null){
-			infos = parseXML(xml);
-			SimpleAdapter simpleAdapter = buildSimpleAdapter(infos);
-			this.setListAdapter(simpleAdapter);
-		}
-		else{
-			Toast.makeText(this, "can't connect to the music server", Toast.LENGTH_SHORT);
-		}			
+			
 		
 		
 	}

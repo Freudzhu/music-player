@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dip"
+    android:background="@drawable/header_bg100"
+    >
+
+    <ImageView
+        android:id="@+id/listButton"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/list64" 
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:contentDescription="@string/list"/>
+    <ImageView
+        android:id="@+id/logoButton"
+        android:layout_width="138dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+		android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:src="@drawable/logo128"
+        android:contentDescription="@string/logo" />
+    <ImageView
+        android:id="@+id/settingButton"
+        android:layout_width="76dp"
+        android:layout_height="wrap_content"
+      	android:paddingLeft="18dp"
+        android:paddingRight="18dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/settings48"
+        android:contentDescription="@string/settings" />
+</RelativeLayout>

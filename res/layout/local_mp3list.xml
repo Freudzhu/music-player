@@ -2,12 +2,61 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:padding="5dp" >
 
-    <ListView 
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:id="@id/android:list"
-          />
+	<FrameLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	     >
+	    <LinearLayout
+	        
+	        android:id="@+id/file_list"
+	        android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:orientation="vertical">
+        	    <!-- Editext for Search -->
+    			<EditText android:id="@+id/inputSearch"
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:hint="Search Music.."
+			        android:inputType="textVisiblePassword"
+			        />
+  				<ListView
+		        android:id="@id/android:list"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+				android:descendantFocusability="blocksDescendants"  >
+  				</ListView>
+	    </LinearLayout>
+
+	    <LinearLayout
+            android:id="@+id/empty_view"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:gravity="center"> 
+           	<Button
+        		android:id="@+id/addMusic"
+        		android:layout_width="wrap_content"
+       			android:layout_height="wrap_content"
+        		android:text="@string/addMusicDir" 
+       			android:textColor="@android:color/black"
+        		android:textSize = "20sp"
+       		/>			
+            <TextView
+                android:drawableTop="@drawable/empty_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/no_file"
+                android:textSize="15sp"
+                android:singleLine="true" />
+        </LinearLayout>
+	</FrameLayout>
+
+
+
 
 </RelativeLayout>

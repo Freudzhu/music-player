@@ -32,6 +32,7 @@ public class Mp3ListContentHandler extends DefaultHandler{
 		if(tagName.equals("lrc.size")){
 			info.setLrcSize(content);
 		}
+		
 	}
 	@Override
 	public void endDocument() throws SAXException {

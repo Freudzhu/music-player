@@ -1,5 +1,4 @@
 package com.example.musicplayer.service;
-
 import com.example.downloader.HttpDownLoader;
 import com.example.model.Mp3Info;
 import android.app.Service;
@@ -14,7 +13,7 @@ public class DownloaderService extends Service{
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
-		Mp3Info mp3Info = (Mp3Info) intent.getSerializableExtra("mp3Info");
+		Mp3Info mp3Info = (Mp3Info) intent.getParcelableExtra("mp3Info");
 		Thread t = new Thread(new DownMp3Tread(mp3Info));
 		t.start();
 		return super.onStartCommand(intent, flags, startId);

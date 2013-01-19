@@ -1,7 +1,6 @@
 package com.example.model;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 public class Mp3Info implements Parcelable{
 
 	private String id;
@@ -9,7 +8,14 @@ public class Mp3Info implements Parcelable{
 	private String mp3Size;
 	private String lrcName;
 	private String lrcSize;
-	
+	private String src;
+	private String artist;
+	private String albumArt;
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "mp3Name:" + mp3Name + "artist:" + artist;
+	}
 	public Mp3Info() {
 		super();
 	}
@@ -21,6 +27,18 @@ public class Mp3Info implements Parcelable{
 		this.mp3Size = mp3Size;
 		this.lrcName = lrcName;
 		this.lrcSize = lrcSize;
+	}
+	public String getArtist() {
+		return artist;
+	}
+	public void setArtist(String artist) {
+		this.artist = artist;
+	}
+	public String getAlbumArt() {
+		return albumArt;
+	}
+	public void setAlbumArt(String albumArt) {
+		this.albumArt = albumArt;
 	}
 	public String getId() {
 		return id;
@@ -52,12 +70,8 @@ public class Mp3Info implements Parcelable{
 	public void setLrcSize(String lrcSize) {
 		this.lrcSize = lrcSize;
 	}
-	@Override
-	public String toString() {
-		return "mp3Info [id=" + id + ", mp3Name=" + mp3Name + ", mp3Size="
-				+ mp3Size + ", lrcName=" + lrcName + ", lrcSize=" + lrcSize
-				+ "]";
-	}
+	
+
 	public int describeContents() {
 		// TODO Auto-generated method stub
 		return 0;
@@ -69,6 +83,8 @@ public class Mp3Info implements Parcelable{
 		arg0.writeString(mp3Size);
 		arg0.writeString(lrcName);
 		arg0.writeString(lrcSize);
+		arg0.writeString(src);
+		arg0.writeString(artist);
 		
 	}
 	public static final Parcelable.Creator<Mp3Info> CREATOR
@@ -86,6 +102,8 @@ public class Mp3Info implements Parcelable{
 			myClass.mp3Size = source.readString();
 			myClass.lrcName = source.readString();
 			myClass.lrcSize = source.readString();
+			myClass.src = source.readString();
+			myClass.artist = source.readString();
 		    return myClass;
 		
 		}
@@ -95,5 +113,11 @@ public class Mp3Info implements Parcelable{
 		    return new Mp3Info[size];
 		}
 	};
+	public String getSrc() {
+		return src;
+	}
+	public void setSrc(String src) {
+		this.src = src;
+	}
 
 }

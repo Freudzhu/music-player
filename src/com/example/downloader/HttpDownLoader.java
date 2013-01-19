@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import com.example.util.FileUtil;
 public class HttpDownLoader {
 
@@ -19,33 +18,38 @@ public class HttpDownLoader {
 		StringBuffer sb = new StringBuffer();
 		String line = null;
 		BufferedReader bf = null;
-	
-		try {
-			url = new URL(urlStr);
-			urlConn = (HttpURLConnection) url.openConnection();
-			urlConn.setConnectTimeout(3000);
-			bf = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-			while( (line = bf.readLine()) != null){
-				sb.append(line);
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally{
+		if(urlStr != null){
 			try {
-				urlConn.disconnect();
-				if(bf != null)
-					bf.close();
+				url = new URL(urlStr);
+				urlConn = (HttpURLConnection) url.openConnection();
+				urlConn.setConnectTimeout(1000);
+				bf = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+				while( (line = bf.readLine()) != null){
+					sb.append(line);
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			finally{
+				try {
+					urlConn.disconnect();
+					if(bf != null)
+						bf.close();
+				}catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
+		
 		return sb.toString();
 	}
 	
 	public int downLoadFile(String path,String filename,String urlStr){
+		if(path == null && filename == null && urlStr == null){
+			return -1;
+		}
 		InputStream is = null;
 		FileUtil fileUtil = new FileUtil();
 		if(fileUtil.isFileExist(filename,path)){
@@ -63,23 +67,27 @@ public class HttpDownLoader {
 	
 	
 	public InputStream getInputStreamByUrl(String urlStr){
-		try {
-			url = new URL(urlStr);
-			urlConn = (HttpURLConnection) url.openConnection();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		InputStream is = null;
-		try {
-			is = urlConn.getInputStream();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if( urlStr != null){
+			try {
+				url = new URL(urlStr);
+				urlConn = (HttpURLConnection) url.openConnection();
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			try {
+				is = urlConn.getInputStream();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		
 		return is;
 	}
 	/**

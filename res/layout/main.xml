@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+   	 <com.markupartist.android.widget.ActionBar
+	    android:id="@+id/actionbar"
+	    style="@style/ActionBar"
+	    android:layout_width="match_parent"
+	    android:layout_height="50dp"
+   	 />
+     <RelativeLayout
+        android:id="@+id/settings_slide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/actionbar"
+        android:visibility="visible" >
+        
+        <include
+            android:id="@+id/settings"
+            android:layout_width="fill_parent"
+            android:layout_height="70dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
+            layout="@layout/settings" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/now_playing_slide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/actionbar" >
+     	<android.support.v4.view.ViewPager
+	        android:id="@+id/vPager"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_gravity="center"
+	        android:background="#000000"
+	        android:flipInterval="30"
+	        android:persistentDrawingCache="animation"
+	        android:layout_above="@+id/progressBar"
+	     />
+     	<ImageView
+	        android:id="@+id/cursor"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:scaleType="matrix"
+	        android:src="@drawable/bg_progress_fill" 
+	        android:layout_above="@+id/progressBar"
+	       />
+     	<SeekBar
+			 android:id="@+id/progressBar"
+			 android:layout_width="match_parent"
+			 android:layout_height="wrap_content"
+			 android:layout_above="@+id/relativeLayout1"
+			 android:layout_alignParentLeft="true"
+			 android:layout_marginBottom="-6dp"
+			 android:layout_marginTop="-6dp"
+			 android:progressDrawable="@drawable/progress_bar_full" />
+     	 <RelativeLayout
+	        android:id = "@+id/relativeLayout1"
+	        android:layout_width="match_parent"
+	   		android:layout_height="64dp"
+	   		android:layout_alignParentBottom="true"
+	   		android:layout_alignParentLeft="true"
+	   		android:layout_alignParentRight="true"
+	   		android:orientation="vertical"
+	   		android:background="@drawable/header_bg100"
+	   		android:layout_below="@+id/now_playing_slide"
+        >
+		        <ImageView
+			        android:id="@+id/backButton"
+			       	android:layout_width="68dp"
+				    android:paddingLeft="18dp"
+			        android:paddingRight="18dp"
+			        android:layout_height="wrap_content"
+			        android:layout_alignParentLeft="true"
+			        android:layout_alignParentTop="true"
+			        android:layout_alignParentBottom="true"
+			        android:src="@drawable/back48" 
+			        android:contentDescription="@string/back"/>
+		
+			    <ImageView
+			        android:id="@+id/repeatButton"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_alignParentBottom="true"
+		            android:layout_alignParentTop="true"
+		            android:layout_toRightOf="@+id/playButton"
+		            android:paddingLeft="14dp"
+		            android:paddingRight="14dp"
+			        android:src="@drawable/repeat48" 
+			        android:contentDescription="@string/repeat"/>
+			
+			    <ImageView
+			        android:id="@+id/playButton"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			  		android:layout_alignParentBottom="true"
+			        android:layout_alignParentTop="true"
+			        android:layout_centerHorizontal="true"
+			        android:src="@drawable/play64"
+			        android:paddingLeft="20dp"
+			        android:paddingRight="20dp"
+			        android:contentDescription="@string/play" />
+		
+			    <ImageView
+			     android:id="@+id/shuffleButton"
+			     android:layout_width="wrap_content"
+			     android:layout_height="wrap_content"
+			     android:layout_toLeftOf="@+id/playButton"
+			     android:layout_alignParentBottom="true"
+		         android:layout_alignParentTop="true"
+			     android:src="@drawable/shuffle48" 
+			     android:paddingLeft="14dp"
+		         android:paddingRight="14dp"
+			     android:contentDescription="@string/shuffle"/>
+			
+			    <ImageView
+			     android:id="@+id/nextButton"
+			     android:layout_width="68dp"
+			     android:paddingLeft="12dp"
+		         android:paddingRight="18dp"
+			     android:layout_height="wrap_content"
+			 	 android:layout_alignParentBottom="true"
+		         android:layout_alignParentTop="true"
+		         android:layout_alignParentRight="true"  
+			     android:src="@drawable/next48" 
+			     android:contentDescription="@string/next"/>
+    	</RelativeLayout>
+   
+        
+   </RelativeLayout>
+
+
+</RelativeLayout>

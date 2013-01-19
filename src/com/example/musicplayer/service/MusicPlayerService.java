@@ -1,20 +1,23 @@
 package com.example.musicplayer.service;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import com.example.constant.ConstantMessage;
 import com.example.model.Mp3Info;
-import com.example.musicplayer.ConstantMessage;
-import com.example.util.LrcProcessor;
+import com.example.musicplayer.InfoApplication;
+import com.example.musicplayer.PlayerActivity;
+import com.example.musicplayer.R;
+import com.example.musicplayer.playlist.MusicPlayList;
+import com.example.preference.Preference;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.Binder;
-import android.os.Environment;
-import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 public class MusicPlayerService extends Service{
@@ -25,9 +28,16 @@ public class MusicPlayerService extends Service{
             return MusicPlayerService.this;
         }
     }	
-	ArrayList<ArrayList> time_message = null;
 	private MediaPlayer mediaPlayer = null; 
+	Preference preferences;
+	ArrayList<Mp3Info > mp3Infos;
+	MusicPlayList musicPlayList;
 	Mp3Info mp3Info =null;
+	private static final int ONGOING_NOTIFICATION = 1;
+	private Notification notification;
+	NotificationManager mNotificationManager;
+			
+	InfoApplication applicationInfos;
 	boolean isPlaying = false;
 	long beginMill = 0;
 	long pauseMill = 0;
@@ -35,18 +45,29 @@ public class MusicPlayerService extends Service{
 	@Override
 	public IBinder onBind(Intent intent) {
 		// TODO Auto-generated method stub
-		mp3Info = (Mp3Info) intent.getParcelableExtra("mp3Info");
-		String mp3Path = Environment.getExternalStorageDirectory() + File.separator+"mp3"+File.separator + mp3Info.getMp3Name();
-		mediaPlayer =MediaPlayer.create(this, Uri.parse("file://"+mp3Path));
-		mediaPlayer.setLooping(false);	
+				
+		mediaPlayer =MediaPlayer.create(this, Uri.parse("file://"+mp3Info.getSrc()));
+		mediaPlayer.setLooping(false);
+			
+		isPlaying = true;	
+		try {
+			mediaPlayer.prepare();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		mediaPlayer.start();
 		mediaPlayer.setOnCompletionListener(new OnCompletionListener() {			
 			public void onCompletion(MediaPlayer arg0) {
 				// TODO Auto-generated method stub
-				lrcHandler.removeCallbacks(updateLrcMessgae);
-				Intent intent = new Intent();
-				intent.setAction(ConstantMessage.PlayerMessage.action_name);
-				intent.putExtra("EndMessage", "end");
-				sendBroadcast(intent);
+				isPlaying = false;
+				Intent music_end = new Intent();
+				music_end.setAction(ConstantMessage.PlayerMessage.music_completion);
+				sendBroadcast(music_end);
+				
 			}
 		});
 		return mBinder;
@@ -54,23 +75,61 @@ public class MusicPlayerService extends Service{
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
-		mp3Info = (Mp3Info) intent.getParcelableExtra("mp3Info");
+		
 		int MSG = (int)intent.getIntExtra("message", 0);
-		if(mp3Info != null){
-			if(MSG == ConstantMessage.PlayerMessage.PLAY_MSG)
-			{
-				play(mp3Info);
-			}
-			else if(MSG == ConstantMessage.PlayerMessage.PAUSE_MSG){
-				pause();
-			}
-			else{
-				stop();
-			}
+		if(MSG == ConstantMessage.PlayerMessage.PLAY_MSG){
+			int position = applicationInfos.getStartPosition();
+			mp3Info = mp3Infos.get(position);
+ 			if(mp3Info != null)
+ 				play(mp3Info);		
+		}
+		else if(MSG == ConstantMessage.PlayerMessage.PLAY_NEXT_MSG){
+			if(musicPlayList != null){
+				mp3Info = musicPlayList.getNextMusic(mp3Info);
+ 				if(mp3Info != null){
+ 					play(mp3Info);
+ 				}
+ 			}	
+		}
+		else if(MSG == ConstantMessage.PlayerMessage.PLAY_BACK_MSG){
+			if(musicPlayList != null){
+				mp3Info = musicPlayList.getPreviousMusic(mp3Info);
+ 				if(mp3Info != null){
+ 					play(mp3Info);
+ 				}
+ 			}	
+		}
+		else if(MSG == ConstantMessage.PlayerMessage.PAUSE_MSG){
+			pause();
+		}
+		else{
+			stop();
 		}
 		return super.onStartCommand(intent, flags, startId);
 	}
 	
+	@Override
+	public void onCreate() {
+		// TODO Auto-generated method stub
+		super.onCreate();
+		applicationInfos = (InfoApplication)getApplication();
+		mp3Infos = (ArrayList<Mp3Info>) applicationInfos.getMp3Infos();
+		int position = applicationInfos.getStartPosition();
+		mp3Info = mp3Infos.get(position);
+		preferences = Preference.getInstance(getApplicationContext());
+		musicPlayList = new MusicPlayList(mp3Infos,preferences);
+		
+		this.notification = new Notification(R.drawable.ic_launcher, getText(R.string.app_name),System.currentTimeMillis());
+        Intent notificationIntent = new Intent(this, PlayerActivity.class);
+        notificationIntent.putExtra("lanchMode", "notification");
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        this.notification.setLatestEventInfo(this, getText(R.string.app_name), mp3Info.getMp3Name(), pendingIntent);
+        
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        	// mId allows you to update the notification later on.
+        mNotificationManager.notify(ONGOING_NOTIFICATION,this.notification);
+        startForeground(ONGOING_NOTIFICATION, this.notification);
+	}
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
@@ -80,14 +139,14 @@ public class MusicPlayerService extends Service{
 	}
 
 	public void play(Mp3Info mp3Info){
-		String mp3Path = Environment.getExternalStorageDirectory() + File.separator+"mp3"+File.separator + mp3Info.getMp3Name();
-		try {
-			prepareLrc();
+        Intent notificationIntent = new Intent(this, PlayerActivity.class);
+        notificationIntent.putExtra("lanchMode", "notification");
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+		this.notification.setLatestEventInfo(this, getText(R.string.app_name), mp3Info.getMp3Name(), pendingIntent);
+		mNotificationManager.notify(ONGOING_NOTIFICATION,this.notification);
+		try {			
 			mediaPlayer.reset();
-			mediaPlayer.setDataSource(mp3Path);
-			updateLrcMessgae =new UpdateLrcMessage();
-			beginMill = System.currentTimeMillis();
-			lrcHandler.postDelayed(updateLrcMessgae, 5);
+			mediaPlayer.setDataSource(mp3Info.getSrc());
 			isPlaying = true;	
 			mediaPlayer.prepare();
 			mediaPlayer.start();
@@ -104,110 +163,18 @@ public class MusicPlayerService extends Service{
 	public void pause(){
 		if(mediaPlayer != null){
 			if(isPlaying){
-				mediaPlayer.pause();
-				lrcHandler.removeCallbacks(updateLrcMessgae);
-				pauseMill = System.currentTimeMillis();					
+				mediaPlayer.pause();			
 			}else{			
-				mediaPlayer.start();
-				beginMill += (System.currentTimeMillis() - pauseMill);
-				lrcHandler.postDelayed(updateLrcMessgae, 5);
+				mediaPlayer.start();	
 			}			
 		}
-
 		isPlaying = isPlaying ? false :true;
 	}
 	public void stop(){
-		beginMill = 0;
-		pauseMill = 0;
-		lrcHandler.removeCallbacks(updateLrcMessgae);
 		mediaPlayer.stop();
 	}
-	private void prepareLrc(){
-		LrcProcessor lrcProccessor = new LrcProcessor();
-		String mp3Path = Environment.getExternalStorageDirectory() + File.separator+"mp3"+File.separator + mp3Info.getLrcName();
-		File lrc = new File(mp3Path);
-		try {
-			time_message = lrcProccessor.process(new FileInputStream(lrc));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}	
-	Handler lrcHandler = new Handler();
-	UpdateLrcMessage updateLrcMessgae;
-	class UpdateLrcMessage implements Runnable{
-		private long nextMill = 0;
-		private String lrcMessage;
-		private String lrc1 ="";
-		private String lrc2 ="";
-		private String lrc3 ="";
-		private String lrc4 ="";
-		ArrayList<Long> timeMill ;
-		ArrayList<String> message ;
-		
-		public UpdateLrcMessage(){
-			timeMill = time_message.get(0);
-			message = time_message.get(1);
-			nextMill = timeMill.get(0);
-			lrcMessage = message.get(0);
-		}
-		public void run() {
-			// TODO Auto-generated method stub			
-			if(setMill != 0){
-				beginMill -=  (setMill -(System.currentTimeMillis() - beginMill));
-				setMill = 0;
-			}
-			long offset = System.currentTimeMillis() - beginMill;			
-			Intent intent = new Intent();
-			intent.setAction(ConstantMessage.PlayerMessage.action_name);
-			intent.putExtra("lrcMessage", lrcMessage);
-			intent.putExtra("lrc1", lrc1);
-			intent.putExtra("lrc2", lrc2);
-			intent.putExtra("lrc3", lrc3);
-			intent.putExtra("lrc4", lrc4);
-			sendBroadcast(intent);	
-			for(int i=0;i < timeMill.size()-1;i++){
-				long tempMill = timeMill.get(i);
-				String tempMessage = message.get(i);
 
-				if(tempMill - offset <= 65 && tempMill -offset >= 0){
-					nextMill = tempMill;
-					lrcMessage = tempMessage;
-					if(i-2 >=0){
-						lrc1 = message.get(i-2);
-					}
-					else{
-						lrc1 = " ";
-					}
-					if(i-1 >=0){
-						lrc2 = message.get(i-1);
-					}
-					else{
-						lrc2 = " ";
-					}
-					if((i + 1) <= (message.size() -1)){
-						lrc3 = message.get(i+1);
-					}
-					else{
-						lrc3 = "  ";
-					}
-					if((i + 2) <= (message.size() -1)){
-						lrc4 = message.get(i + 2);
-					}
-					else{
-						lrc4 = "  ";
-					}
-
-					break;
-				}
-			}
-	
-			lrcHandler.postDelayed(updateLrcMessgae, 1);
-		}
-	}
+	//the interface to service
 	public int getMusicPlayCurrentLength(){
 		if(mediaPlayer != null){
 			return mediaPlayer.getCurrentPosition();
@@ -225,5 +192,11 @@ public class MusicPlayerService extends Service{
 		setMill = progress;
 		mediaPlayer.start();
 		
+	}
+	public boolean getPlayState(){
+		return isPlaying;
+	}
+	public Mp3Info getCurrentMp3Info(){
+		return mp3Info;
 	}
 }
