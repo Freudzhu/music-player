@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/actionbar"
-        android:visibility="visible" >
+        android:visibility="gone" >
         
         <include
             android:id="@+id/settings"
@@ -29,24 +29,51 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/actionbar" >
+        <LinearLayout 
+            android:id="@+id/tabTitle"
+            android:layout_width="match_parent"
+           	android:layout_height="40dip"
+            android:layout_below="@+id/settings">
+              <TextView
+	            android:id="@+id/music_info"
+	            android:layout_width="fill_parent"
+	  			android:layout_height="fill_parent"
+	            android:layout_weight="1.0"
+	            android:gravity="center"
+	             android:textColor="@drawable/textcolor"
+	            android:text="@string/tableTilte1"
+	            android:textSize="20dip" />
+
+		      <TextView
+		            android:id="@+id/music_lrc"
+		            android:layout_width="fill_parent"
+		            android:layout_height="fill_parent"
+		            android:layout_weight="1.0"
+		            android:gravity="center"
+		             android:textColor="@drawable/textcolor"
+		             android:text="@string/tableTilte2"
+		            android:textSize="20dip" />
+        </LinearLayout>
+       <ImageView
+	        android:id="@+id/cursor"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:scaleType="matrix"
+	        android:src="@drawable/bg_progress_fill" 
+	        android:layout_below="@+id/tabTitle"
+	       />
      	<android.support.v4.view.ViewPager
 	        android:id="@+id/vPager"
-	        android:layout_width="match_parent"
+	        android:layout_width="wrap_content"
 	        android:layout_height="match_parent"
 	        android:layout_gravity="center"
 	        android:background="#000000"
 	        android:flipInterval="30"
 	        android:persistentDrawingCache="animation"
 	        android:layout_above="@+id/progressBar"
+	        android:layout_below="@+id/cursor"
 	     />
-     	<ImageView
-	        android:id="@+id/cursor"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:scaleType="matrix"
-	        android:src="@drawable/bg_progress_fill" 
-	        android:layout_above="@+id/progressBar"
-	       />
+
      	<SeekBar
 			 android:id="@+id/progressBar"
 			 android:layout_width="match_parent"

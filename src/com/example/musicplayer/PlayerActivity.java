@@ -14,7 +14,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -126,13 +128,15 @@ public class PlayerActivity extends Activity {
 	    private ViewPager mPager;//Ò³¿¨ÄÚÈÝ
 	    private List<View> listViews; // TabÒ³ÃæÁÐ±í
 	    private ImageView cursor;// ¶¯»­Í¼Æ¬
-	    private int offset = 0;// ¶¯»­Í¼Æ¬Æ«ÒÆÁ¿
-	    private int currIndex = 1;// µ±Ç°Ò³¿¨±àºÅ
+	    private int offset;// ¶¯»­Í¼Æ¬Æ«ÒÆÁ¿
+	    private int currIndex = 0;// µ±Ç°Ò³¿¨±àºÅ
 	    private int bmpW;// ¶¯»­Í¼Æ¬¿í¶È
 	    View nowPlaying; 
 	    View lrcDisplaying;
 	    LrcText playlrcText;
 	    LrcProcessor lrcService;
+	    TextView musicInfo ;
+	    TextView musicLrc;
 	    
 	public boolean getPlayState(){
 		return isPlaying;
@@ -332,6 +336,13 @@ public class PlayerActivity extends Activity {
 		nowPlayingSlide =(RelativeLayout) findViewById(R.id.now_playing_slide);
 		settingsSlide=(RelativeLayout) findViewById(R.id.settings_slide);
 		playlrcText = (LrcText)lrcDisplaying.findViewById(R.id.lrctext);
+		playlrcText.SetTimeLrc(lrcService.getLrcList());  
+		playlrcText.setNotCurrentPaint(Color.GREEN);  
+		playlrcText.setCurrentPaint(Color.BLUE);  
+		playlrcText.setLrcTextSize(20);  
+		playlrcText.setTexttypeface(Typeface.SANS_SERIF);  
+		playlrcText.setBrackgroundcolor(Color.BLACK);  
+		playlrcText.setTextHeight(40); 
 
 	}
  	private void SetupButtonListeners()
@@ -546,12 +557,12 @@ public class PlayerActivity extends Activity {
         listViews = new ArrayList<View>();
         LayoutInflater mInflater = getLayoutInflater();
         
-        listViews.add(lrcDisplaying);
         listViews.add(nowPlaying);
-        listViews.add(mInflater.inflate(R.layout.now_playing, null));
+        listViews.add(lrcDisplaying);
         mPager.setAdapter(new MyPagerAdapter(listViews));
-        mPager.setCurrentItem(1);
+        mPager.setCurrentItem(0);
         mPager.setOnPageChangeListener(new MyOnPageChangeListener());
+        InitTextView();
     }
     /**
      * ³õÊ¼»¯¶¯»­
@@ -563,23 +574,42 @@ public class PlayerActivity extends Activity {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screenW = dm.widthPixels;// »ñÈ¡·Ö±æÂÊ¿í¶È
-        offset = (screenW / 3 - bmpW) / 2;// ¼ÆËãÆ«ÒÆÁ¿
+        offset = (screenW / 2 - bmpW) / 2;// ¼ÆËãÆ«ÒÆÁ¿
         Matrix matrix = new Matrix();
         matrix.postTranslate(offset , 0);
         cursor.setImageMatrix(matrix);// ÉèÖÃ¶¯»­³õÊ¼Î»ÖÃ
-        Animation animation = new TranslateAnimation(offset, offset * 2 + bmpW, 0, 0);
-        animation.setFillAfter(true);// True:Í¼Æ¬Í£ÔÚ¶¯»­½áÊøÎ»ÖÃ
-        animation.setDuration(300);
-        cursor.startAnimation(animation);
     
     }
+    
+    private void InitTextView() {
+        musicInfo = (TextView) findViewById(R.id.music_info);
+        musicLrc = (TextView) findViewById(R.id.music_lrc);
+        
+        musicInfo.setOnClickListener(new MyOnClickListener(0));
+        musicLrc.setOnClickListener(new MyOnClickListener(1));
+
+    }
+    /**
+     * Í·±êµã»÷¼àÌý
+*/
+    public class MyOnClickListener implements View.OnClickListener {
+        private int index = 0;
+
+        public MyOnClickListener(int i) {
+            index = i;
+        }
+
+        public void onClick(View v) {
+            mPager.setCurrentItem(index);
+        }
+    };
     /**
      * Ò³¿¨ÇÐ»»¼àÌý
 */
     public class MyOnPageChangeListener implements OnPageChangeListener {
 
         int one = offset * 2 + bmpW;// Ò³¿¨1 -> Ò³¿¨2 Æ«ÒÆÁ¿
-        int two = one * 2;// Ò³¿¨1 -> Ò³¿¨3 Æ«ÒÆÁ¿
+   
 
         public void onPageSelected(int arg0) {
             Animation animation = null;
@@ -587,25 +617,15 @@ public class PlayerActivity extends Activity {
             case 0:
                 if (currIndex == 1) {
                     animation = new TranslateAnimation(one, 0, 0, 0);
-                } else if (currIndex == 2) {
-                    animation = new TranslateAnimation(two, 0, 0, 0);
-                }
+                } 
                 break;
             case 1:
                 if (currIndex == 0) {
                     animation = new TranslateAnimation(offset,one, 0, 0);
                     Log.i("intridate move ?", one +"");
-                } else if (currIndex == 2) {
-                    animation = new TranslateAnimation(two, one, 0, 0);
-                }
+                } 
                 break;
-            case 2:
-                if (currIndex == 0) {
-                    animation = new TranslateAnimation(offset, two, 0, 0);
-                } else if (currIndex == 1) {
-                    animation = new TranslateAnimation(one, two, 0, 0);
-                }
-                break;
+           
             }
             currIndex = arg0;
             animation.setFillAfter(true);// True:Í¼Æ¬Í£ÔÚ¶¯»­½áÊøÎ»ÖÃ

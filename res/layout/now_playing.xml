@@ -15,7 +15,8 @@
          android:contentDescription="@string/album_art"
          android:scaleType="centerCrop"
          android:src="@drawable/blank_album_art"
-         android:visibility="visible" />
+         android:visibility="visible" 
+         android:padding="30dp"/>
      
      <LinearLayout
         android:id="@+id/linearLayout1"

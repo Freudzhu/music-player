@@ -39,5 +39,7 @@
     <string name="title_activity_player">PlayerActivity</string>
     
     <string name="addMusicDir">选择本地音乐目录</string>
+    <string name="tableTilte1">歌曲</string>
+    <string name="tableTilte2">歌词</string>
 
 </resources>

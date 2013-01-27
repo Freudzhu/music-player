@@ -59,7 +59,10 @@ public class LrcProcessor {
 	        {  
 	            e.printStackTrace();  
 	        }  
-	    }  
+	    }
+	    public Vector<timelrc> getLrcList(){
+	    	return this.lrclist;
+	    }
 	      
 	    private String AnalyzeLRC(String LRCText)  
 	    {  
